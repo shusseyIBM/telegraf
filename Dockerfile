@@ -6,16 +6,6 @@ ENV LANG C.UTF-8
 
 # Default versions
 ENV TELEGRAF_VERSION 1.2.0
-ENV INFLUXDB_VERSION 1.2.0
-ENV GRAFANA_VERSION  4.1.1-1484211277
-
-# Database Defaults
-ENV INFLUXDB_GRAFANA_DB datasource
-ENV INFLUXDB_GRAFANA_USER datasource
-ENV INFLUXDB_GRAFANA_PW datasource
-
-ENV MYSQL_GRAFANA_USER grafana
-ENV MYSQL_GRAFANA_PW grafana
 
 # Fix bad proxy issue
 COPY system/99fixbadproxy /etc/apt/apt.conf.d/99fixbadproxy
@@ -33,8 +23,6 @@ RUN apt-get -y update && \
   git \
   htop \
   libfontconfig \
-  mysql-client \
-  mysql-server \
   nano \
   net-tools \
   openssh-server \
@@ -60,19 +48,6 @@ RUN mkdir -p /var/log/supervisor && \
 COPY ssh/id_rsa .ssh/id_rsa
 COPY bash/profile .profile
 
-# Configure MySql
-# COPY scripts/setup_mysql.sh /tmp/setup_mysql.sh
-
-# RUN /tmp/setup_mysql.sh
-
-# Install InfluxDB
-# RUN wget https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb && \
-# 	dpkg -i influxdb_${INFLUXDB_VERSION}_amd64.deb && rm influxdb_${INFLUXDB_VERSION}_amd64.deb
-
-# Configure InfluxDB
-# COPY influxdb/influxdb.conf /etc/influxdb/influxdb.conf
-# COPY influxdb/init.sh /etc/init.d/influxdb
-
 # Install Telegraf
 RUN wget https://dl.influxdata.com/telegraf/releases/telegraf_${TELEGRAF_VERSION}_amd64.deb && \
 	dpkg -i telegraf_${TELEGRAF_VERSION}_amd64.deb && rm telegraf_${TELEGRAF_VERSION}_amd64.deb
@@ -80,13 +55,6 @@ RUN wget https://dl.influxdata.com/telegraf/releases/telegraf_${TELEGRAF_VERSION
 # Configure Telegraf
 COPY telegraf/telegraf.conf /etc/telegraf/telegraf.conf
 COPY telegraf/init.sh /etc/init.d/telegraf
-
-# Install Grafana
-#  RUN wget https://grafanarel.s3.amazonaws.com/builds/grafana_${GRAFANA_VERSION}_amd64.deb && \
-#	dpkg -i grafana_${GRAFANA_VERSION}_amd64.deb && rm grafana_${GRAFANA_VERSION}_amd64.deb
-
-# Configure Grafana
-# COPY grafana/grafana.ini /etc/grafana/grafana.ini
 
 # Cleanup
 RUN apt-get clean && \
