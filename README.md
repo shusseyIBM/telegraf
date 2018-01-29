@@ -11,7 +11,7 @@ docker run -d \
   --name telegraf \
   -p 22022:22 \
   -p 8125:8125/udp \
-  samuelebistoletti/docker-statsd-influxdb-grafana:latest
+  shussey/telegraf:latest
 ```
 
 You can replace `latest` with the desired version listed in changelog file.
